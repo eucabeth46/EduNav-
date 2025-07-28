@@ -2,6 +2,8 @@ package com.example.edunav
 
 import androidx.compose.runtime.Composable
 import android.os.Bundle
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -12,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Button
 import android.app.Activity
+import java.util.*
 import androidx.compose.ui.graphics.Color
 
 
@@ -21,6 +24,36 @@ class TutorialsActivity : ComponentActivity() {
         setContent {
             TutorialsScreen(this)
         }
+    }
+}
+class SomeActivity : ComponentActivity() {
+    private lateinit var tts: TextToSpeech
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val prefs = getSharedPreferences("EduNavPrefs", Context.MODE_PRIVATE)
+        val voiceSpeed = prefs.getFloat("voiceSpeed", 1.0f)
+        val languageCode = prefs.getString("language", "en") ?: "en"
+        val locale = when (languageCode) {
+            "fr" -> Locale.FRENCH
+            "sw" -> Locale("sw")
+            "es" -> Locale("es")
+            else -> Locale.ENGLISH
+        }
+
+        tts = TextToSpeech(this) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                tts.language = locale
+                tts.setSpeechRate(voiceSpeed)
+            }
+        }
+        // ... your code
+    }
+
+    override fun onDestroy() {
+        tts.stop()
+        tts.shutdown()
+        super.onDestroy()
     }
 }
 
