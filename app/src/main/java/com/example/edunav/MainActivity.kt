@@ -1,6 +1,7 @@
 package com.example.edunav
 
 import android.app.Activity
+import android.content.Context
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
@@ -93,7 +94,11 @@ class MainActivity : ComponentActivity() {
 
         tts = TextToSpeech(this) { status ->
             if (status == TextToSpeech.SUCCESS) {
-                tts.language = Locale.US
+                val prefs = getSharedPreferences("EduNavPrefs", Context.MODE_PRIVATE)
+                val speed = prefs.getFloat("voiceSpeed", 1.0f)
+                val langCode = prefs.getString("language", "en")
+                tts.language = Locale(langCode ?: "en")
+                tts.setSpeechRate(speed)
                 speakOnLaunch()
             }
         }
@@ -205,8 +210,8 @@ class MainActivity : ComponentActivity() {
 
             Button(
                 onClick = {
-                    tts.speak("Settings button clicked", TextToSpeech.QUEUE_FLUSH, null, null)
-                    // Add settings screen logic here
+                    val intent = Intent(activity, SettingsActivity::class.java)
+                    activity.startActivity(intent)
                 },
                 modifier = Modifier.semantics { contentDescription = "Open Settings" }
             ) {

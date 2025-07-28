@@ -3,22 +3,26 @@
     package="com.example.edunav">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <application
         android:label="EduNav"
         android:theme="@style/Theme.EduNav">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity" />
         <activity android:name=".ClassActivity" />
         <activity android:name=".TranscribeActivity" />
         <activity android:name=".TutorialsActivity" />
+        <activity android:name=".SettingsActivity" />
     </application>
 
 </manifest>
